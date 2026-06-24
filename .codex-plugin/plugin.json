@@ -1,0 +1,10 @@
+{
+  "name": "naive-user-tester",
+  "version": "0.1.0",
+  "description": "Drive a live web app as a source-blind, naive first-time user and report UX/behavior gaps before deploy. Config-driven, Playwright-MCP powered.",
+  "author": { "name": "Kian Alikhani" },
+  "license": "MIT",
+  "keywords": ["qa", "ux-testing", "playwright", "mcp", "exploratory-testing", "naive-user"],
+  "commands": "commands/",
+  "skills": "skills/"
+}

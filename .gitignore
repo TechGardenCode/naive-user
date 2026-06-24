@@ -1,0 +1,4 @@
+# This repo (the plugin) has nothing to ignore yet.
+# In a TARGET app repo, keep the qa/ markdown committed but ignore screenshot evidence:
+#   qa/naive-user/*/screenshots/
+node_modules/

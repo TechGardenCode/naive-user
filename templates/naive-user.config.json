@@ -1,0 +1,14 @@
+{
+  "app": "myapp",
+  "baseUrl": "http://localhost:3000",
+  "startCommand": null,
+  "auth": {
+    "steps": [
+      "Go to /",
+      "If bounced to a login page, type the dev username into the username field",
+      "Submit to land back in the app"
+    ],
+    "critiqueLoginPage": false
+  },
+  "coverageNotes": "Optional hints, not a script. e.g. 'top nav, the create form, the results list, the item detail/edit/delete, search, empty + loading states'."
+}

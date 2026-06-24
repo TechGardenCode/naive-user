@@ -1,0 +1,12 @@
+{
+  "name": "naive-user-tester",
+  "version": "0.1.0",
+  "description": "Drive a live web app as a source-blind, naive first-time user and report UX/behavior gaps before deploy.",
+  "contextFileName": "skills/naive-user-tester/SKILL.md",
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    }
+  }
+}
