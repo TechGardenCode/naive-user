@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/TechGardenCode/naive-user-tester/security/advisories/new
+    about: Report security issues privately, not as a public issue. See SECURITY.md.
+  - name: Playwright MCP issues
+    url: https://github.com/microsoft/playwright-mcp/issues
+    about: Bugs in the browser tooling itself belong upstream.

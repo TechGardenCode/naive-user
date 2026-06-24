@@ -1,0 +1,14 @@
+{
+  "app": "notes",
+  "baseUrl": "http://localhost:3000",
+  "startCommand": "npm run dev",
+  "auth": {
+    "steps": [
+      "Go to /",
+      "If bounced to a login page (dev/mock infra, not the product), type username 'dev'",
+      "Submit, you land back in the app"
+    ],
+    "critiqueLoginPage": false
+  },
+  "coverageNotes": "Sidebar nav (hover each item; active item marked; click to navigate). Theme toggle (flips light/dark? sticks across reloads?). Capture box (first line reads as title? type switcher note/todo/reminder changes the form? conditional fields make sense, e.g. a reminder wants a time? primary button blocks on missing required fields? new entry appears in the list below? Ctrl/Cmd+Enter to submit? add and remove tags). Search (filters list live or debounced; clear; 'no matches' state for nonsense input). Entries list (row click opens detail; todo checkbox toggles without navigating; keyboard arrows/Enter/Tab). Entry detail (read; Edit, do the fields swap when type changes?; Delete, does it confirm first?; back link). Empty and loading states."
+}

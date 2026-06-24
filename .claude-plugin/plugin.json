@@ -6,7 +6,7 @@
   "homepage": "https://github.com/TechGardenCode/naive-user-tester",
   "repository": "https://github.com/TechGardenCode/naive-user-tester",
   "license": "MIT",
-  "keywords": ["qa", "ux-testing", "playwright", "mcp", "exploratory-testing", "naive-user"],
+  "keywords": ["qa", "ux-testing", "usability-testing", "exploratory-testing", "playwright", "playwright-mcp", "mcp", "browser-automation", "ai-agent", "naive-user", "claude-code"],
   "commands": "commands/",
   "skills": "skills/",
   "mcpServers": {

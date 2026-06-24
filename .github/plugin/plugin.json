@@ -4,7 +4,7 @@
   "description": "Drive a live web app as a source-blind, naive first-time user and report UX/behavior gaps before deploy. Config-driven, Playwright-MCP powered.",
   "author": { "name": "Kian Alikhani" },
   "license": "MIT",
-  "keywords": ["qa", "ux-testing", "playwright", "mcp", "exploratory-testing", "naive-user"],
+  "keywords": ["qa", "ux-testing", "usability-testing", "exploratory-testing", "playwright", "playwright-mcp", "mcp", "browser-automation", "ai-agent", "naive-user", "claude-code"],
   "commands": "commands/",
   "skills": "skills/",
   "mcpServers": {

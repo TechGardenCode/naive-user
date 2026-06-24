@@ -1,19 +1,40 @@
 # naive-user-tester
 
-Drive your **live web app as an uninformed, source-blind first-time user** — hover, click,
-type in a real browser, observe what actually happens, and report the gaps (bugs, broken
-expectations, UX surprises, a11y) before real users hit them.
+Drive your live web app as a source-blind, first-time user. An AI agent hovers,
+clicks, and types in a real browser, watches what actually happens, and reports the
+gaps (bugs, broken expectations, UX surprises, accessibility issues) before real users
+hit them.
 
-It fills the gap between three things that *don't* catch first-impression UX problems:
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Harnesses](https://img.shields.io/badge/harnesses-Claude%20Code%20%7C%20Codex%20%7C%20Gemini%20%7C%20Copilot%20%7C%20OpenCode-444)](#install)
+[![Powered by Playwright MCP](https://img.shields.io/badge/powered%20by-Playwright%20MCP-2EAD33)](https://github.com/microsoft/playwright-mcp)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-- **Real users** — find these gaps, but only after you ship.
-- **You, manually** — you know how it's built, so you can't see it fresh.
-- **Scripted e2e tests** — assert *known* flows; they can't discover the *unknown* ones.
+It covers a gap that three other things miss:
 
-The skill forms expectations from only two sources — **what's on the screen** and
-**universal web conventions** — never from your source code. It builds a knowledge base
-(`qa/naive-user/<app>/`) that lives *outside* the code, the way a real user's mental model
-does, and compounds across runs.
+- **Real users** find these problems, but only after you ship.
+- **You, testing manually,** know how the app is built, so you cannot see it fresh.
+- **Scripted end-to-end tests** assert flows you already know. They cannot discover the ones you do not.
+
+The agent forms expectations from only two sources: what is on the screen, and
+universal web conventions. It never reads your source code. It builds a knowledge base
+under `qa/naive-user/<app>/` that lives outside the code, the way a real user's mental
+model does, and it compounds across runs.
+
+<!-- Add a short demo GIF or screenshot here before launch, then set a social preview
+     image in Settings > General > Social preview. Both noticeably lift first impressions. -->
+
+## Contents
+
+- [What you get](#what-you-get)
+- [Requirements](#requirements)
+- [Install](#install)
+- [Configure](#configure)
+- [Usage](#usage)
+- [Example output](#example-output)
+- [How it ships](#how-it-ships)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## What you get
 
@@ -28,20 +49,20 @@ Findings are severity-ranked: `bug`, `broken-expectation`, `ux-gap`, `surprise`,
 
 ## Requirements
 
-- **Node.js 18+** — the only hard requirement. The Playwright MCP server provisions its
-  browser on first use. (If you ever hit a missing-browser error, run `npx playwright install chromium`.)
-- **A running app** — already serving at a URL, or a `startCommand` in your config.
-- **One of the supported harnesses** below (each needs agentic tool-calling **and** the
-  Playwright MCP browser tools — that's why instruction-only IDE rule hosts aren't targeted).
+- **Node.js 18+** is the only hard requirement. The Playwright MCP server provisions its
+  browser on first use. If you ever hit a missing-browser error, run `npx playwright install chromium`.
+- **A running app**, either already serving at a URL or startable from a `startCommand` in your config.
+- **One of the supported harnesses** below. Each needs agentic tool-calling plus the
+  Playwright MCP browser tools, which is why instruction-only IDE rule hosts are not targeted.
 
 ## Install
 
-### 1. Add the plugin/skill to your harness *and* wire Playwright MCP
+### 1. Add the plugin to your harness and wire Playwright MCP
 
-The same MCP server body — `npx @playwright/mcp@latest` — works everywhere; only OpenCode and
-Copilot tweak the shape.
+The same MCP server body, `npx @playwright/mcp@latest`, works everywhere. Only OpenCode
+and Copilot tweak the shape.
 
-**Claude Code** — marketplace install; the plugin bundles the Playwright MCP, so it's one step:
+**Claude Code.** Marketplace install. The plugin bundles the Playwright MCP, so it is one step:
 
 ```text
 /plugin marketplace add TechGardenCode/naive-user-tester      # or a local path: ./naive-user-tester
@@ -49,9 +70,9 @@ Copilot tweak the shape.
 ```
 
 > Not using the plugin? Copy this repo's `.mcp.json` into your app repo root and drop
-> `skills/` + `commands/` into your project's `.claude/`.
+> `skills/` and `commands/` into your project's `.claude/`.
 
-**Codex** — drop the plugin in, then add the MCP server to `~/.codex/config.toml`:
+**Codex.** Drop the plugin in, then add the MCP server to `~/.codex/config.toml`:
 
 ```toml
 [mcp_servers.playwright]
@@ -59,7 +80,7 @@ command = "npx"
 args = ["@playwright/mcp@latest"]
 ```
 
-**Gemini CLI** — install as an extension (`gemini-extension.json` bundles both the MCP server
+**Gemini CLI.** Install as an extension (`gemini-extension.json` bundles both the MCP server
 and the skill as context), or add the server to `~/.gemini/settings.json`:
 
 ```json
@@ -70,7 +91,7 @@ and the skill as context), or add the server to `~/.gemini/settings.json`:
 }
 ```
 
-**GitHub Copilot CLI** — plugin lives at `.github/plugin/plugin.json` (and bundles the MCP).
+**GitHub Copilot CLI.** The plugin lives at `.github/plugin/plugin.json` and bundles the MCP.
 To wire it manually, add to `~/.copilot/mcp-config.json`:
 
 ```json
@@ -81,8 +102,8 @@ To wire it manually, add to `~/.copilot/mcp-config.json`:
 }
 ```
 
-**OpenCode** — `opencode.json` bundles the MCP (note: `command` is an array, and `-y` avoids
-the interactive npx prompt):
+**OpenCode.** `opencode.json` bundles the MCP. Note that `command` is an array, and `-y`
+avoids the interactive npx prompt:
 
 ```json
 {
@@ -92,9 +113,11 @@ the interactive npx prompt):
 }
 ```
 
-### 2. Point it at your app
+## Configure
 
-Copy `templates/naive-user.config.json` into **your app repo's root** and fill it in:
+### 1. Point it at your app
+
+Copy `templates/naive-user.config.json` into your app repo's root and fill it in:
 
 ```json
 {
@@ -106,13 +129,13 @@ Copy `templates/naive-user.config.json` into **your app repo's root** and fill i
 }
 ```
 
-`startCommand` replaces any "how do I start the app" step — set it and the skill runs it; leave
-it `null` and the skill assumes the app is already up at `baseUrl`. See `examples/iris/` for a
-fully worked config.
+`startCommand` replaces any "how do I start the app" step. Set it and the agent runs it.
+Leave it `null` and the agent assumes the app is already up at `baseUrl`. See
+[`examples/notes-app/`](examples/notes-app/) for a fully worked config.
 
-### 3. Keep the knowledge base reviewable
+### 2. Keep the knowledge base reviewable
 
-In your **app repo's** `.gitignore`, commit the markdown but ignore the screenshot evidence:
+In your app repo's `.gitignore`, commit the markdown but ignore the screenshot evidence:
 
 ```gitignore
 qa/naive-user/*/screenshots/
@@ -124,31 +147,55 @@ qa/naive-user/*/screenshots/
 /naive-test [app]
 ```
 
-With no argument it uses the `app` from `naive-user.config.json`. The skill loads the prior
+With no argument it uses the `app` from `naive-user.config.json`. The agent loads the prior
 mental model, makes sure the app is running, signs in via the configured auth steps, explores
 the live UI source-blind, and writes an updated `mental-model.md` plus a dated findings report.
 Run it on demand while developing, or dispatch it as a subagent to run in parallel with other work.
 
 A changed-from-last-time behavior is flagged as a **regression**.
 
-## How it ships (single source → thin adapters)
+## Example output
 
-Core content lives **once**:
+A findings file leads with a one-line summary and a severity-sorted table, then one entry per gap:
 
-- `skills/naive-user-tester/SKILL.md` — the source-blind testing methodology (config-driven).
-- `commands/naive-test.md` (+ `.toml` for Codex/OpenCode) — the `/naive-test` entry point.
+```markdown
+| # | Severity | Surface | Gap |
+|---|----------|---------|-----|
+| 1 | bug      | Capture | Pressing Enter in the title field reloads the page |
+| 2 | a11y     | Sidebar | Active nav item has no visible focus ring |
 
-Each harness gets a thin manifest that *points at* those files and declares the Playwright MCP
-in that harness's native format — no content is duplicated:
+## 1. Pressing Enter reloads instead of saving
+- Expected: Enter submits the form (primary-button convention).
+- Did: Typed a title, pressed Enter.
+- Observed: Full page reload, draft lost.
+- Severity: bug
+- Repro: 1. Open /. 2. Type in title. 3. Press Enter.
+- Screenshot: screenshots/capture-enter-before.png
+```
+
+## How it ships
+
+Core content lives once:
+
+- `skills/naive-user-tester/SKILL.md` holds the source-blind testing methodology (config-driven).
+- `commands/naive-test.md` (plus `.toml` for Codex and OpenCode) is the `/naive-test` entry point.
+
+Each harness gets a thin manifest that points at those files and declares the Playwright MCP
+in that harness's native format. No content is duplicated:
 
 | Harness | Manifest | MCP declared in |
 |---|---|---|
-| Claude Code | `.claude-plugin/plugin.json` (+ `marketplace.json`) | plugin `mcpServers` / `.mcp.json` |
+| Claude Code | `.claude-plugin/plugin.json` (plus `marketplace.json`) | plugin `mcpServers` / `.mcp.json` |
 | Codex | `.codex-plugin/plugin.json` | `~/.codex/config.toml` |
 | Gemini CLI | `gemini-extension.json` | extension `mcpServers` / `settings.json` |
 | Copilot CLI | `.github/plugin/plugin.json` | plugin `mcpServers` / `~/.copilot/mcp-config.json` |
 | OpenCode | `opencode.json` | `opencode.json` `mcp` |
 
+## Contributing
+
+Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow,
+and [SECURITY.md](SECURITY.md) to report a vulnerability privately.
+
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).

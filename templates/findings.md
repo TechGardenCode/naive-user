@@ -1,4 +1,4 @@
-# Findings — <app> — <YYYY-MM-DD>
+# Findings: <app>, <YYYY-MM-DD>
 
 _One-line summary of this run._
 
