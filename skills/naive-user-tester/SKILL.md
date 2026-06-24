@@ -39,7 +39,8 @@ is the developer's job, not yours.
   `http://localhost:PORT` you'll drive.
 - **A real browser.** Drive it with the Playwright MCP tools (`browser_navigate`,
   `browser_hover`, `browser_click`, `browser_type`, `browser_snapshot`,
-  `browser_take_screenshot`). Act on what a user perceives — roles, visible text,
+  `browser_take_screenshot`, `browser_wait_for`, `browser_console_messages`,
+  `browser_network_requests`). Act on what a user perceives — roles, visible text,
   placeholders — never internal selectors pulled from source. If these tools aren't
   available, the Playwright MCP server isn't wired up — see the project README.
 - **Sign in** by following `config.auth.steps` exactly (e.g. "go to `/`, you'll be bounced
@@ -60,21 +61,37 @@ recorded last time has changed, that's a **regression** — call it out explicit
 
 ## The loop (per surface, per element)
 
-1. **Survey.** Open the page. `browser_snapshot` + `browser_take_screenshot`. List what
-   *you, the user,* perceive — the nav, the fields, the buttons, the list. Ignore
-   anything you can't see or infer from the screen.
+1. **Survey.** Open the page. Take **one scoped, shallow** `browser_snapshot` — `target` to
+   scope to the region, `depth` to stay shallow, `filename` to dump a large tree out of the
+   transcript — plus a screenshot. List what *you, the user,* perceive — the nav, the fields,
+   the buttons, the list. Ignore anything you can't see or infer from the screen.
 2. **Hypothesize.** For each thing, write your naive expectation and *why* (which
    convention or on-screen cue). "This sidebar item looks like a link; hovering should
    visibly change it; clicking should take me somewhere."
 3. **Act.** Actually do it — hover, click, type, submit, use the keyboard. One thing at a time.
-4. **Observe.** Snapshot/screenshot *after*. Describe what actually changed — visually and
-   in the accessibility tree. Don't assume it worked; look.
+4. **Observe.** Re-snapshot the *affected region* (targeted + shallow), not the whole tree.
+   If the result isn't instant, bound the wait — `browser_wait_for { time: 3 }` **once**, or
+   `browser_wait_for { text }` when you expect a specific positive (a row appearing). Describe
+   what actually changed — visually and in the accessibility tree. Don't assume it worked; look.
+   Still pending after the short wait is itself a **finding**, not a reason to wait longer.
 5. **Judge.** Met expectation → record as **confirmed behavior** in the mental model.
    Unmet, nothing happened, an error, or it's confusing → **finding**.
 6. **Record.** Update the mental model; append the finding.
 
 Work one surface at a time and stop when you've covered the visible surface — you're a
 user exploring, not a crawler enumerating the DOM.
+
+## Tooling discipline (fast, low-noise)
+
+- **Evidence sweep, every surface.** Before leaving a surface, check
+  `browser_console_messages { level: "error" }` and `browser_network_requests` (filter to the
+  app's API). Auto-raise any console error, failed request, or 4xx/5xx as a **finding**, with
+  the request as repro — throughout the run, not once at the end.
+- **Screenshots are evidence, not narration.** Capture before/after only for a finding you're
+  recording, not every step.
+- **Never wait to prove a negative.** The single bounded `browser_wait_for { time }` in the
+  loop is the most you wait; don't reach for a long `textGone`/timeout to confirm something
+  *didn't* happen — a still-pending state is the finding.
 
 ## Severity taxonomy
 
@@ -120,6 +137,8 @@ the most valuable kind. For a worked example of a per-app coverage map, see `exa
 ## Hard rules
 
 - Don't read app source to form expectations. Observe.
+- Runtime logs and network responses **are** fair evidence for a finding's root cause; the
+  app's **source** is still never read to form expectations.
 - Don't conclude from the DOM you didn't trigger — act, then look.
 - Real interactions only; one finding = the full template above.
 - Keep `qa/` (markdown) committed so findings are reviewable and the mental model compounds.
