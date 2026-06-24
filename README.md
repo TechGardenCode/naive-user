@@ -1,4 +1,4 @@
-# naive-user-tester
+# naive-user
 
 Drive your live web app as a source-blind, first-time user. An AI agent hovers,
 clicks, and types in a real browser, watches what actually happens, and reports the
@@ -65,8 +65,8 @@ and Copilot tweak the shape.
 **Claude Code.** Marketplace install. The plugin bundles the Playwright MCP, so it is one step:
 
 ```text
-/plugin marketplace add TechGardenCode/naive-user-tester      # or a local path: ./naive-user-tester
-/plugin install naive-user-tester@naive-user-tester
+/plugin marketplace add TechGardenCode/naive-user      # or a local path: ./naive-user
+/plugin install naive-user@naive-user
 ```
 
 > Not using the plugin? Copy this repo's `.mcp.json` into your app repo root and drop
@@ -177,7 +177,7 @@ A findings file leads with a one-line summary and a severity-sorted table, then 
 
 Core content lives once:
 
-- `skills/naive-user-tester/SKILL.md` holds the source-blind testing methodology (config-driven).
+- `skills/naive-user/SKILL.md` holds the source-blind testing methodology (config-driven).
 - `commands/naive-test.md` (plus `.toml` for Codex and OpenCode) is the `/naive-test` entry point.
 
 Each harness gets a thin manifest that points at those files and declares the Playwright MCP

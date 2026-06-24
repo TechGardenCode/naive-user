@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in improving naive-user-tester. Issues and pull requests are welcome.
+Thanks for your interest in improving naive-user. Issues and pull requests are welcome.
 
 ## Ground rules
 
@@ -13,7 +13,7 @@ Thanks for your interest in improving naive-user-tester. Issues and pull request
 Core content lives once, and each harness gets a thin manifest that points at it. When you
 change behavior, you usually edit one of these two files:
 
-- `skills/naive-user-tester/SKILL.md` is the source-blind testing methodology.
+- `skills/naive-user/SKILL.md` is the source-blind testing methodology.
 - `commands/naive-test.md` (plus `commands/naive-test.toml` for Codex and OpenCode) is the
   `/naive-test` entry point.
 

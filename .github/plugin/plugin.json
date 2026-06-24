@@ -1,5 +1,5 @@
 {
-  "name": "naive-user-tester",
+  "name": "naive-user",
   "version": "0.1.0",
   "description": "Drive a live web app as a source-blind, naive first-time user and report UX/behavior gaps before deploy. Config-driven, Playwright-MCP powered.",
   "author": { "name": "Kian Alikhani" },

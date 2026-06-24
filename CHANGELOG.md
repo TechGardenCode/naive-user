@@ -20,12 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2026-06-23
 
 ### Added
-- Initial release of the naive-user-tester plugin and skill.
+- Initial release of the naive-user plugin and skill.
 - Source-blind, config-driven exploratory UX testing methodology in
-  `skills/naive-user-tester/SKILL.md`.
+  `skills/naive-user/SKILL.md`.
 - `/naive-test` command for Claude Code, Codex, Gemini CLI, Copilot CLI, and OpenCode.
 - Playwright MCP wiring for each supported harness.
 - Config template, mental-model and findings templates, and a worked example config.
 
-[Unreleased]: https://github.com/TechGardenCode/naive-user-tester/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/TechGardenCode/naive-user-tester/releases/tag/v0.1.0
+[Unreleased]: https://github.com/TechGardenCode/naive-user/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/TechGardenCode/naive-user/releases/tag/v0.1.0

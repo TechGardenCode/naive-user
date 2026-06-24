@@ -1,9 +1,9 @@
 {
-  "name": "naive-user-tester",
+  "name": "naive-user",
   "owner": { "name": "Kian Alikhani" },
   "plugins": [
     {
-      "name": "naive-user-tester",
+      "name": "naive-user",
       "source": "./",
       "description": "Drive a live web app as a source-blind, naive first-time user and report UX/behavior gaps before deploy. Config-driven, Playwright-MCP powered."
     }

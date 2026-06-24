@@ -1,5 +1,5 @@
 ---
-name: naive-user-tester
+name: naive-user
 description: Drive the live app as an uninformed first-time user. Hover, click, and type in a real browser, observe what actually happens, and report the gaps (bugs, broken expectations, UX surprises, accessibility issues) before deploy. Source-blind: forms expectations from the screen plus web conventions, never from source. Config-driven via naive-user.config.json so it works on any web app. Use for /naive-test, exploratory UX and behavior testing, or a parallel QA pass while developing.
 user-invocable: true
 ---

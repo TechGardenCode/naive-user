@@ -3,7 +3,7 @@ description: Drive the live app as a naive first-time user and report UX/behavio
 argument-hint: [app, defaults to the app in naive-user.config.json]
 ---
 
-Run the **`naive-user-tester`** skill against the app named in `$ARGUMENTS`, or, if none is
+Run the **`naive-user`** skill against the app named in `$ARGUMENTS`, or, if none is
 given, the `app` in `naive-user.config.json`.
 
 Invoke the skill and follow it exactly: read `naive-user.config.json`, make sure the app is

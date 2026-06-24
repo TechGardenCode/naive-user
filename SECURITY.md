@@ -5,7 +5,7 @@
 Please do not open a public issue for security problems.
 
 Report vulnerabilities privately through GitHub's
-[Report a vulnerability](https://github.com/TechGardenCode/naive-user-tester/security/advisories/new)
+[Report a vulnerability](https://github.com/TechGardenCode/naive-user/security/advisories/new)
 flow, or by email to **techgardencode@gmail.com**. Include a description, steps to reproduce,
 and the impact you expect. You will get an acknowledgement within a few days, and a fix or
 mitigation plan once the report is confirmed.

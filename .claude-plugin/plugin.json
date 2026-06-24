@@ -1,10 +1,10 @@
 {
-  "name": "naive-user-tester",
+  "name": "naive-user",
   "version": "0.1.0",
   "description": "Drive a live web app as a source-blind, naive first-time user and report UX/behavior gaps (bugs, broken expectations, UX surprises, a11y) before deploy. Config-driven, Playwright-MCP powered.",
   "author": { "name": "Kian Alikhani" },
-  "homepage": "https://github.com/TechGardenCode/naive-user-tester",
-  "repository": "https://github.com/TechGardenCode/naive-user-tester",
+  "homepage": "https://github.com/TechGardenCode/naive-user",
+  "repository": "https://github.com/TechGardenCode/naive-user",
   "license": "MIT",
   "keywords": ["qa", "ux-testing", "usability-testing", "exploratory-testing", "playwright", "playwright-mcp", "mcp", "browser-automation", "ai-agent", "naive-user", "claude-code"],
   "commands": "commands/",
