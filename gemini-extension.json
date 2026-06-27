@@ -1,6 +1,6 @@
 {
   "name": "naive-user",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Drive a live web app as a source-blind, naive first-time user and report UX/behavior gaps before deploy.",
   "contextFileName": "skills/naive-user/SKILL.md",
   "mcpServers": {

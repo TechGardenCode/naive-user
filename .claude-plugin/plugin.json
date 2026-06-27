@@ -1,6 +1,6 @@
 {
   "name": "naive-user",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Drive a live web app as a source-blind, naive first-time user and report UX/behavior gaps (bugs, broken expectations, UX surprises, a11y) before deploy. Config-driven, Playwright-MCP powered.",
   "author": { "name": "Kian Alikhani" },
   "homepage": "https://github.com/TechGardenCode/naive-user",
