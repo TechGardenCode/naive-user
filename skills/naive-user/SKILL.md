@@ -135,6 +135,26 @@ find gaps they do not mention, and a gap in something the notes did not call out
 the most valuable kind. For a worked example of a per-app coverage map, see
 [`examples/notes-app/`](../../examples/notes-app/).
 
+## Finish: commit the run
+
+A run's value is the knowledge it leaves behind, and that knowledge only compounds if it
+lands in git. Findings left uncommitted rot as dirty working state and collide with the next
+pull or merge. So when you have finished writing the mental model and the findings file,
+reconcile what you wrote under `qa/naive-user/<app>/`, governed by `config.commitFindings`
+(default `"ask"` when the key is absent), as follows:
+
+- **`"ask"`**: show the user `git status --short qa/naive-user/<app>/` (the mental-model and
+  findings you just changed), then ask whether to commit them. If yes, commit; if no, leave
+  them in the working tree.
+- **`"auto"`**: commit without asking. Use this for unattended or subagent runs that cannot
+  field a prompt, so their findings are never silently dropped.
+- **`"off"`**: do nothing; leave the changes for the user to handle.
+
+When you commit, **stage only `qa/naive-user/<app>/`**, never `git add -A`. Other working
+changes (config, app code, unrelated edits) are not yours to sweep into a QA commit. Use a
+Conventional Commits message: `docs(qa): naive-user <app> run <YYYY-MM-DD>`. If `git` is not
+available or that path is not inside a repo, skip this step silently.
+
 ## Hard rules
 
 - Do not read app source to form expectations. Observe.
@@ -143,6 +163,7 @@ the most valuable kind. For a worked example of a per-app coverage map, see
 - Do not conclude from the DOM you did not trigger. Act, then look.
 - Real interactions only. One finding equals the full template above.
 - Keep `qa/` markdown committed so findings are reviewable and the mental model compounds.
+  The **Finish** step above does this, gated by `config.commitFindings`.
 
 ponytail: config-driven and source-blind end to end; screenshots plus reasoning for hover (no
 CSS-diff engine). Coverage is derived per app from the live screen, not hardcoded. Wire
