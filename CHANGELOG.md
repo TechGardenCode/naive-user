@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- End-of-run commit step. The agent now reconciles the `qa/naive-user/<app>/` knowledge it
+  wrote, governed by a new `commitFindings` config key (`"ask"` default, `"auto"`, `"off"`).
+  It stages only that path, so findings stop rotting as uncommitted working state and colliding
+  with the next pull or merge.
 - Community health files: `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, issue
   templates, and a pull request template.
 - `CHANGELOG.md` and an `/update-changelog` maintainer command for Claude Code.

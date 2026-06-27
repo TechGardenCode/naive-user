@@ -125,6 +125,7 @@ Copy `templates/naive-user.config.json` into your app repo's root and fill it in
   "baseUrl": "http://localhost:3000",
   "startCommand": null,
   "auth": { "steps": ["Go to /", "Type the dev username", "Submit"], "critiqueLoginPage": false },
+  "commitFindings": "ask",
   "coverageNotes": "Optional hints, not a script."
 }
 ```
@@ -135,7 +136,16 @@ Leave it `null` and the agent assumes the app is already up at `baseUrl`. See
 
 ### 2. Keep the knowledge base reviewable
 
-In your app repo's `.gitignore`, commit the markdown but ignore the screenshot evidence:
+The mental model and findings only compound if they land in git, so at the end of a run the
+agent reconciles what it wrote under `qa/naive-user/<app>/`. `commitFindings` controls how
+(default `"ask"`):
+
+- **`"ask"`**: show you the changed files and ask before committing them.
+- **`"auto"`**: commit without asking (for unattended or subagent runs that cannot be prompted).
+- **`"off"`**: never touch git; leave the changes in your working tree.
+
+It stages only `qa/naive-user/<app>/`, never your other changes. In your app repo's
+`.gitignore`, commit the markdown but ignore the screenshot evidence:
 
 ```gitignore
 qa/naive-user/*/screenshots/
