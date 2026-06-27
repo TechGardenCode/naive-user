@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-06-27
+
 ### Added
 - End-of-run commit step. The agent now reconciles the `qa/naive-user/<app>/` knowledge it
   wrote, governed by a new `commitFindings` config key (`"ask"` default, `"auto"`, `"off"`).
@@ -31,5 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Playwright MCP wiring for each supported harness.
 - Config template, mental-model and findings templates, and a worked example config.
 
-[Unreleased]: https://github.com/TechGardenCode/naive-user/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/TechGardenCode/naive-user/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/TechGardenCode/naive-user/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/TechGardenCode/naive-user/releases/tag/v0.1.0
