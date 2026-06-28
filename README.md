@@ -125,6 +125,7 @@ Copy `templates/naive-user.config.json` into your app repo's root and fill it in
   "baseUrl": "http://localhost:3000",
   "startCommand": null,
   "auth": { "steps": ["Go to /", "Type the dev username", "Submit"], "critiqueLoginPage": false },
+  "browser": { "device": "desktop", "headless": false },
   "commitFindings": "ask",
   "coverageNotes": "Optional hints, not a script."
 }
@@ -134,7 +135,39 @@ Copy `templates/naive-user.config.json` into your app repo's root and fill it in
 Leave it `null` and the agent assumes the app is already up at `baseUrl`. See
 [`examples/notes-app/`](examples/notes-app/) for a fully worked config.
 
-### 2. Keep the knowledge base reviewable
+### 2. Pick a device, or go headless
+
+The `browser` block is optional; both keys default to the values shown above.
+
+**`device`** sizes the browser for the run. The agent resizes after the first navigation:
+
+| `device`  | viewport   |
+|-----------|------------|
+| `desktop` | 1280 × 800 |
+| `tablet`  | 820 × 1180 |
+| `mobile`  | 390 × 844  |
+
+This emulates viewport **size** only — enough to exercise CSS-responsive layouts and mobile nav.
+It does not set a mobile user-agent, touch, or device pixel ratio. For apps that sniff those (or
+to make screenshots pixel-accurate), add `--device "iPhone 15"` (or `--viewport-size "390x844"`)
+to your Playwright MCP args instead.
+
+**`headless`** records intent; the run only goes headless when the Playwright MCP server is
+launched with `--headless` (it runs **headed** by default). Add the flag to the server's `args`.
+For Claude Code that's `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "playwright": { "command": "npx", "args": ["@playwright/mcp@latest", "--headless"] }
+  }
+}
+```
+
+Every harness has the same `args` array — see the [Install](#install) table for where each one
+lives. Headless is the right choice for unattended or subagent runs; headed lets you watch it drive.
+
+### 3. Keep the knowledge base reviewable
 
 The mental model and findings only compound if they land in git, so at the end of a run the
 agent reconciles what it wrote under `qa/naive-user/<app>/`. `commitFindings` controls how
@@ -159,7 +192,8 @@ qa/naive-user/*/screenshots/
 
 With no argument it uses the `app` from `naive-user.config.json`. The agent loads the prior
 mental model, makes sure the app is running, signs in via the configured auth steps, explores
-the live UI source-blind, and writes an updated `mental-model.md` plus a dated findings report.
+the live UI source-blind, writes an updated `mental-model.md` plus a dated findings report, and
+closes the browser when it is done so no stray Chrome window is left behind.
 Run it on demand while developing, or dispatch it as a subagent to run in parallel with other work.
 
 A changed-from-last-time behavior is flagged as a **regression**.
