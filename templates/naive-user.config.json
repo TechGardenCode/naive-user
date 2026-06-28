@@ -10,7 +10,7 @@
     ],
     "critiqueLoginPage": false
   },
-  "browser": { "device": "desktop", "headless": false },
+  "browser": { "device": "desktop" },
   "commitFindings": "ask",
   "coverageNotes": "Optional hints, not a script. e.g. 'top nav, the create form, the results list, the item detail/edit/delete, search, empty + loading states'."
 }

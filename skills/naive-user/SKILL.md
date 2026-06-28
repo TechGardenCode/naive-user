@@ -31,8 +31,8 @@ is the developer's job, not yours.
 
 - **Config.** Read `naive-user.config.json`. Look in the target repo root first, then
   in `qa/naive-user/<app>/config.json`. It tells you the app `name`, the `baseUrl`, an
-  optional `startCommand`, the `auth` steps, an optional `browser` block (`device` and
-  `headless`, defaulting to `desktop` and headed), and optional `coverageNotes`. If no config
+  optional `startCommand`, the `auth` steps, an optional `browser.device`
+  (`desktop` | `tablet` | `mobile`), and optional `coverageNotes`. If no config
   exists, ask the user for the app's URL and how to sign in, and offer to save one from
   `templates/naive-user.config.json`.
 - **A running app.** If `config.startCommand` is set and the app is not already up, run it.
@@ -44,12 +44,12 @@ is the developer's job, not yours.
   `browser_network_requests`, `browser_close`). Act on what a user perceives, meaning roles,
   visible text, and placeholders, never internal selectors pulled from source. If these tools
   are not available, the Playwright MCP server is not wired up. See the project README.
-- **The right viewport.** After your first `browser_navigate`, size the window for
-  `config.browser.device` (default `desktop`) with one `browser_resize`: `desktop` 1280×800,
-  `tablet` 820×1180, `mobile` 390×844. This emulates viewport *size* only, not a mobile
-  user-agent, touch, or pixel ratio; for apps that sniff those, the README shows the Playwright
-  MCP `--device` flag. `config.browser.headless` is a launch-time MCP setting (see README), not
-  something you toggle at runtime.
+- **The right viewport.** Only if `config.browser.device` is set, resize after your first
+  `browser_navigate` with one `browser_resize`: `desktop` 1280×800, `tablet` 820×1180,
+  `mobile` 390×844. If the key is absent, **do not resize** — leave the browser at whatever the
+  Playwright MCP launched with, so an MCP-level `--device` (see README) is preserved rather than
+  overridden. Resizing emulates viewport *size* only, not a mobile user-agent, touch, or pixel
+  ratio; for those, set the MCP `--device` flag and leave `browser.device` unset.
 - **Sign in** by following `config.auth.steps` exactly (for example, "go to `/`, you will be
   bounced to a login page, type username `dev`, submit"). Auth is usually dev or mock infra,
   not the product, so do not critique the login page unless the config says it is in scope.
@@ -64,7 +64,10 @@ Your memory lives in `qa/naive-user/<app>/`:
 - `screenshots/` holds before and after captures referenced by findings (gitignored evidence).
 
 On every run: load the prior mental model, explore, then update it. If a behavior you
-recorded last time has changed, that is a **regression**. Call it out explicitly.
+recorded last time has changed, that is a **regression**. Call it out explicitly. **Scope this
+to the device:** note the run's `browser.device` (default desktop) against the behaviors you
+record, and only call a regression when behavior changed *at the same device*. A layout that
+differs between desktop and mobile is responsiveness, not a regression.
 
 ## The loop (per surface, per element)
 
@@ -163,8 +166,7 @@ Conventional Commits message: `docs(qa): naive-user <app> run <YYYY-MM-DD>`. If 
 available or that path is not inside a repo, skip this step silently.
 
 Then **close the browser** with `browser_close` so no window or Chrome process is left for the
-user to clean up. If you opened extra tabs, close those too. Do this last, even if the run ended
-early or hit an error.
+user to clean up (see the cleanup hard rule below).
 
 ## Hard rules
 
@@ -175,6 +177,8 @@ early or hit an error.
 - Real interactions only. One finding equals the full template above.
 - Keep `qa/` markdown committed so findings are reviewable and the mental model compounds.
   The **Finish** step above does this, gated by `config.commitFindings`.
+- Always `browser_close` before you stop — at the end of a normal run, and also if you abort
+  early or hit an error mid-loop. Never leave a browser open for the user to clean up.
 
 ponytail: config-driven and source-blind end to end; screenshots plus reasoning for hover (no
 CSS-diff engine). Coverage is derived per app from the live screen, not hardcoded. Device =
