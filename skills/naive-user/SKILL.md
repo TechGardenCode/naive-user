@@ -31,7 +31,8 @@ is the developer's job, not yours.
 
 - **Config.** Read `naive-user.config.json`. Look in the target repo root first, then
   in `qa/naive-user/<app>/config.json`. It tells you the app `name`, the `baseUrl`, an
-  optional `startCommand`, the `auth` steps, and optional `coverageNotes`. If no config
+  optional `startCommand`, the `auth` steps, an optional `browser.device`
+  (`desktop` | `tablet` | `mobile`), and optional `coverageNotes`. If no config
   exists, ask the user for the app's URL and how to sign in, and offer to save one from
   `templates/naive-user.config.json`.
 - **A running app.** If `config.startCommand` is set and the app is not already up, run it.
@@ -39,10 +40,16 @@ is the developer's job, not yours.
   `http://localhost:PORT` you will drive.
 - **A real browser.** Drive it with the Playwright MCP tools (`browser_navigate`,
   `browser_hover`, `browser_click`, `browser_type`, `browser_snapshot`,
-  `browser_take_screenshot`, `browser_wait_for`, `browser_console_messages`,
-  `browser_network_requests`). Act on what a user perceives, meaning roles, visible text,
-  and placeholders, never internal selectors pulled from source. If these tools are not
-  available, the Playwright MCP server is not wired up. See the project README.
+  `browser_take_screenshot`, `browser_resize`, `browser_wait_for`, `browser_console_messages`,
+  `browser_network_requests`, `browser_close`). Act on what a user perceives, meaning roles,
+  visible text, and placeholders, never internal selectors pulled from source. If these tools
+  are not available, the Playwright MCP server is not wired up. See the project README.
+- **The right viewport.** Resize only when `config.browser.device` is `desktop` (1280×800),
+  `tablet` (820×1180), or `mobile` (390×844): issue one `browser_resize` after your first
+  `browser_navigate`. If the key is absent or unrecognized, **do not resize** — leave the browser
+  at whatever the Playwright MCP launched with, so an MCP-level `--device` is preserved rather than
+  overridden. Resizing changes viewport *size* only; a mobile user-agent, touch, or pixel ratio is
+  the user's MCP `--device` flag, not something you set at runtime (see README).
 - **Sign in** by following `config.auth.steps` exactly (for example, "go to `/`, you will be
   bounced to a login page, type username `dev`, submit"). Auth is usually dev or mock infra,
   not the product, so do not critique the login page unless the config says it is in scope.
@@ -57,7 +64,11 @@ Your memory lives in `qa/naive-user/<app>/`:
 - `screenshots/` holds before and after captures referenced by findings (gitignored evidence).
 
 On every run: load the prior mental model, explore, then update it. If a behavior you
-recorded last time has changed, that is a **regression**. Call it out explicitly.
+recorded last time has changed, that is a **regression**. Call it out explicitly. **Scope this
+to the viewport:** record the run's viewport (the `browser.device` value, or the device the MCP
+launched with when the key is unset) alongside the behaviors you note, and only call a regression
+when behavior changed *at the same viewport*. A layout that differs between desktop and mobile is
+responsiveness, not a regression.
 
 ## The loop (per surface, per element)
 
@@ -155,6 +166,8 @@ changes (config, app code, unrelated edits) are not yours to sweep into a QA com
 Conventional Commits message: `docs(qa): naive-user <app> run <YYYY-MM-DD>`. If `git` is not
 available or that path is not inside a repo, skip this step silently.
 
+Then **close the browser** with `browser_close` (see the cleanup hard rule below).
+
 ## Hard rules
 
 - Do not read app source to form expectations. Observe.
@@ -164,7 +177,12 @@ available or that path is not inside a repo, skip this step silently.
 - Real interactions only. One finding equals the full template above.
 - Keep `qa/` markdown committed so findings are reviewable and the mental model compounds.
   The **Finish** step above does this, gated by `config.commitFindings`.
+- Always `browser_close` before you stop — normal end, early abort, or error mid-loop — so no
+  browser is left for the user. If you abort or error after writing any findings, first commit
+  them per `config.commitFindings` (the Finish step) so an unattended `"auto"` run never silently
+  drops them.
 
-ponytail: config-driven and source-blind end to end; screenshots plus reasoning for hover (no
-CSS-diff engine). Coverage is derived per app from the live screen, not hardcoded. Wire
-findings into /develop or map them back to code only when a need shows up.
+ponytail: config-driven and source-blind end to end. Hover judged from screenshots plus reasoning
+(no CSS-diff engine), coverage derived per app from the live screen (not hardcoded), viewport via
+one runtime resize and teardown via one browser_close (no process-killing). Map findings back to
+code only when a need shows up.
