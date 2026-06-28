@@ -125,7 +125,6 @@ Copy `templates/naive-user.config.json` into your app repo's root and fill it in
   "baseUrl": "http://localhost:3000",
   "startCommand": null,
   "auth": { "steps": ["Go to /", "Type the dev username", "Submit"], "critiqueLoginPage": false },
-  "browser": { "device": "desktop" },
   "commitFindings": "ask",
   "coverageNotes": "Optional hints, not a script."
 }
@@ -137,8 +136,9 @@ Leave it `null` and the agent assumes the app is already up at `baseUrl`. See
 
 ### 2. Pick a device, or go headless
 
-**`browser.device`** is optional and sizes the browser for the run. When set, the agent issues one
-`browser_resize` after the first navigation; leave it out and the run uses the browser as launched.
+**`browser.device`** is optional. Add `"browser": { "device": "mobile" }` (or `tablet` / `desktop`)
+to your config and the agent issues one `browser_resize` to that viewport after the first
+navigation; leave it out and the run uses the browser as launched.
 
 | `device`  | viewport   |
 |-----------|------------|
@@ -148,24 +148,20 @@ Leave it `null` and the agent assumes the app is already up at `baseUrl`. See
 
 This emulates viewport **size** only — enough to exercise CSS-responsive layouts and mobile nav.
 It does not set a mobile user-agent, touch, or device pixel ratio. For apps that gate on those,
-emulate a real device at the **server** level with `--device "iPhone 14"` (≈ 390 × 844) in your
-Playwright MCP args, and leave `browser.device` unset so the run does not resize over it.
+emulate a real device at the **server** level with `--device "iPhone 14"` in your Playwright MCP
+args (that sets a real viewport, user-agent, touch, and pixel ratio), and leave `browser.device`
+unset so the run does not resize over it.
 
 **Headless** is a Playwright MCP server setting, not a config key. The browser runs **headed** by
 default (handy for watching it drive); for unattended, subagent, or CI runs, launch the server with
-`--headless`. Add it wherever your harness declares the server — the
-[How it ships](#how-it-ships) table maps each location. Most take an `args` array:
-
-```json
-{
-  "mcpServers": {
-    "playwright": { "command": "npx", "args": ["@playwright/mcp@latest", "--headless"] }
-  }
-}
-```
-
-OpenCode has no `args` key — append the flag to its `command` array instead:
+`--headless`. Add it to the `args` array wherever your harness declares the server — the
+[How it ships](#how-it-ships) table maps each location — e.g. `"args": ["@playwright/mcp@latest", "--headless"]`.
+OpenCode has no `args` key; append the flag to its `command` array instead:
 `["npx", "-y", "@playwright/mcp@latest", "--headless"]`.
+
+The Claude Code plugin bundles the server **headed**. To run it headless, declare your own
+`playwright` server (the [non-plugin setup](#install) above) in your project's `.mcp.json` with
+`--headless` in `args`; a project-scope definition takes precedence over the plugin's bundled one.
 
 ### 3. Keep the knowledge base reviewable
 
@@ -191,10 +187,8 @@ qa/naive-user/*/screenshots/
 ```
 
 With no argument it uses the `app` from `naive-user.config.json`. The agent loads the prior
-mental model, makes sure the app is running, signs in via the configured auth steps, sizes the
-browser if `browser.device` is set, explores the live UI source-blind, writes an updated
-`mental-model.md` plus a dated findings report, and closes the browser when it is done so no
-stray Chrome window is left behind.
+mental model, makes sure the app is running, signs in, explores the live UI source-blind, writes an
+updated `mental-model.md` plus a dated findings report, and closes the browser when done.
 Run it on demand while developing, or dispatch it as a subagent to run in parallel with other work.
 
 A changed-from-last-time behavior is flagged as a **regression**.
