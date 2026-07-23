@@ -76,6 +76,12 @@ responsiveness, not a regression.
    scope to the region, `depth` to stay shallow, and `filename` to dump a large tree out of the
    transcript, plus a screenshot. List what you, the user, perceive: the nav, the fields,
    the buttons, the list. Ignore anything you cannot see or infer from the screen.
+   **Then LOOK at the screenshot before doing anything else** — broken layout is the first
+   thing a real first-time user notices, and the accessibility tree cannot see it. Content
+   overflowing its container or the viewport, clipped or half-visible controls, elements
+   detached from their group, ragged or overlapping rows, a control visibly straining under
+   more items than it was designed for: each is a **finding on its own**, even when every
+   behavior works and the snapshot tree is clean. Judge at the run's actual viewport.
 2. **Hypothesize.** For each thing, write your naive expectation and why (which
    convention or on-screen cue). "This sidebar item looks like a link; hovering should
    visibly change it; clicking should take me somewhere."
@@ -86,7 +92,9 @@ responsiveness, not a regression.
    what actually changed, both visually and in the accessibility tree. Do not assume it worked; look.
    Still pending after the short wait is itself a **finding**, not a reason to wait longer.
 5. **Judge.** Met expectation means record it as **confirmed behavior** in the mental model.
-   Unmet, nothing happened, an error, or it is confusing means a **finding**.
+   Unmet, nothing happened, an error, or it is confusing means a **finding**. So is
+   **works-but-looks-broken**: correct behavior never excuses a visually broken surface —
+   judge the pixels and the behavior separately, and report each on its own merits.
 6. **Record.** Update the mental model; append the finding.
 
 Work one surface at a time and stop when you have covered the visible surface. You are a

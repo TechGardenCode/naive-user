@@ -1,6 +1,6 @@
 {
   "name": "naive-user",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Drive a live web app as a source-blind, naive first-time user and report UX/behavior gaps before deploy. Config-driven, Playwright-MCP powered.",
   "author": { "name": "Kian Alikhani" },
   "license": "MIT",
