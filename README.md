@@ -152,16 +152,16 @@ emulate a real device at the **server** level with `--device "iPhone 14"` in you
 args (that sets a real viewport, user-agent, touch, and pixel ratio), and leave `browser.device`
 unset so the run does not resize over it.
 
-**Headless** is a Playwright MCP server setting, not a config key. The browser runs **headed** by
-default (handy for watching it drive); for unattended, subagent, or CI runs, launch the server with
-`--headless`. Add it to the `args` array wherever your harness declares the server — the
-[How it ships](#how-it-ships) table maps each location — e.g. `"args": ["@playwright/mcp@latest", "--headless"]`.
-OpenCode has no `args` key; append the flag to its `command` array instead:
-`["npx", "-y", "@playwright/mcp@latest", "--headless"]`.
+**Headless** is a Playwright MCP server setting, not a config key. The bundled server ships
+**headless** in every harness (unattended, subagent, and CI runs are the normal case — no window
+pops). To watch the browser drive, remove `--headless` from the `args` array wherever your harness
+declares the server — the [How it ships](#how-it-ships) table maps each location. OpenCode has no
+`args` key; the flag sits in its `command` array instead.
 
-The Claude Code plugin bundles the server **headed**. To run it headless, declare your own
-`playwright` server (the [non-plugin setup](#install) above) in your project's `.mcp.json` with
-`--headless` in `args`; a project-scope definition takes precedence over the plugin's bundled one.
+Note for Claude Code: the plugin's bundled server is **namespaced**, so a project-scope
+`playwright` server in `.mcp.json` does not override it — both register side by side. Headed
+runs therefore need the flag removed here in the plugin (or a local fork), not a project-level
+redeclaration.
 
 ### 3. Keep the knowledge base reviewable
 
